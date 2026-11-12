@@ -1,0 +1,15 @@
+{
+  "name": "orientation-day",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A first-person office-park cold open. Shuttle ride, badge photo, icebreaker, goose.",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "playtest": "node tools/playtest.cjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "three": "0.158.0"
+  }
+}

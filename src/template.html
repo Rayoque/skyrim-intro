@@ -1,0 +1,146 @@
+<title>Orientation Day</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/*__CSS__*/
+</style>
+
+<div id="game">
+  <canvas id="c" aria-label="Game view" tabindex="-1"></canvas>
+  <div id="vignette"></div>
+  <div class="lid" id="lidT"></div>
+  <div class="lid" id="lidB"></div>
+  <div id="flash"></div>
+  <div id="fade"></div>
+  <div class="bar" id="barT"></div>
+  <div class="bar" id="barB"></div>
+
+  <div id="ui">
+    <div id="top">
+      <div id="objective" role="status" hidden></div>
+      <canvas id="hudBadge" width="150" height="210" hidden></canvas>
+    </div>
+    <div id="mid">
+      <div id="stamp">
+        <div id="stamp1"></div>
+        <div id="stamp2"></div>
+      </div>
+      <div id="toast" hidden></div>
+    </div>
+    <div id="bottom">
+      <div id="subs" aria-live="polite"><div id="subBox" hidden><span id="subName"></span><span id="subText"></span></div></div>
+      <div id="hint"></div>
+      <div id="corner" hidden>
+        <button id="muteBtn" type="button">Sound on</button>
+        <button id="ffBtn" type="button">Hold to skip ahead</button>
+      </div>
+    </div>
+  </div>
+  <div id="joy"><div id="joyKnob"></div></div>
+
+  <section id="creator" class="sheet" hidden aria-label="Badge photo">
+    <div class="kiosk">
+      <header class="kiosk-head">
+        <span class="kiosk-mark" aria-hidden="true">W</span>
+        <span class="kiosk-title">BadgeDesk</span>
+        <span class="kiosk-tag">v4.1 · migrated</span>
+      </header>
+      <div class="kiosk-body" id="kioskEdit">
+        <div class="kiosk-preview"><canvas id="badgeCanvas" width="480" height="672"></canvas></div>
+        <form id="creatorForm" class="fields" autocomplete="off">
+          <div class="field">
+            <label class="lab" for="f-name">Name, as printed</label>
+            <input id="f-name" type="text" maxlength="18" placeholder="New Hire" spellcheck="false">
+          </div>
+          <div class="field">
+            <span class="lab" id="lab-dept">Department</span>
+            <div class="cycler" role="group" aria-labelledby="lab-dept">
+              <button type="button" id="dept-prev" aria-label="Previous department">‹</button>
+              <output id="dept-name"></output>
+              <button type="button" id="dept-next" aria-label="Next department">›</button>
+            </div>
+            <p class="note" id="dept-desc"></p>
+          </div>
+          <div class="field">
+            <span class="lab" id="lab-skin">Skin</span>
+            <div class="swatches" id="sw-skin" role="group" aria-labelledby="lab-skin"></div>
+          </div>
+          <div class="field">
+            <span class="lab" id="lab-hair">Hair</span>
+            <div class="cycler" role="group" aria-labelledby="lab-hair">
+              <button type="button" id="hair-prev" aria-label="Previous hair style">‹</button>
+              <output id="hair-name"></output>
+              <button type="button" id="hair-next" aria-label="Next hair style">›</button>
+            </div>
+            <div class="swatches" id="sw-hair" role="group" aria-label="Hair colour"></div>
+          </div>
+          <div class="field row">
+            <span class="lab" id="lab-lanyard">Lanyard</span>
+            <div class="swatches" id="sw-lanyard" role="group" aria-labelledby="lab-lanyard"></div>
+          </div>
+          <div class="field row">
+            <label class="lab" for="f-glasses">Glasses</label>
+            <input id="f-glasses" type="checkbox">
+          </div>
+          <div class="field">
+            <label class="lab" for="f-smile">Smile <output id="smile-label"></output></label>
+            <input id="f-smile" type="range" min="0" max="100" value="50">
+          </div>
+          <button type="submit" id="takePhoto" class="primary">Take photo</button>
+        </form>
+      </div>
+      <div class="kiosk-body" id="kioskDone" hidden>
+        <div class="kiosk-preview big"><canvas id="badgeFinal" width="480" height="672"></canvas></div>
+        <div class="fields">
+          <p class="printed">Printed.</p>
+          <p class="note">Photo captured 0.4 seconds early. BadgeDesk does not support retakes, appeals, or eye contact.</p>
+          <button type="button" id="clipOn" class="primary">Clip it on</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="choices" class="sheet" hidden aria-label="Choose a reply">
+    <div class="choice-box">
+      <p id="choicePrompt"></p>
+      <div id="choiceList"></div>
+    </div>
+  </section>
+
+  <section id="end" class="sheet" hidden aria-label="The end">
+    <div class="end-box">
+      <p class="eyebrow">Wexcombe Paper &amp; Cloud</p>
+      <h2 class="title">Orientation Day</h2>
+      <p class="end-sub">Day one: incomplete.</p>
+      <div class="end-row">
+        <canvas id="badgeEnd" width="300" height="420"></canvas>
+        <dl class="stats">
+          <div><dt>Speed bumps</dt><dd>11 of 10</dd></div>
+          <div><dt>Fun facts on record</dt><dd id="statFacts">0</dd></div>
+          <div><dt>Days since last goose incident</dt><dd>0</dd></div>
+          <div><dt>Direct reports</dt><dd>0, down from 60</dd></div>
+          <div><dt>Laptop</dt><dd>not shipped</dd></div>
+        </dl>
+      </div>
+      <button type="button" id="againBtn" class="primary">Start over from Lot F</button>
+    </div>
+  </section>
+
+  <section id="start" class="sheet" aria-label="Start">
+    <div class="start-box">
+      <p class="eyebrow">Wexcombe Paper &amp; Cloud · New hire orientation</p>
+      <h1 class="title">Orientation Day</h1>
+      <p class="lede">You fell asleep on the shuttle from Lot F. It is 7:42 on a Monday. Nobody is in the system.</p>
+      <button type="button" id="startBtn" class="primary">Begin</button>
+      <dl class="keys">
+        <div><dt>Look</dt><dd>Move the mouse, or drag</dd></div>
+        <div><dt>Walk</dt><dd>W A S D, or left thumb</dd></div>
+        <div><dt>Skip ahead</dt><dd>Hold F</dd></div>
+        <div><dt>Sound</dt><dd>M to mute. It is better with sound.</dd></div>
+      </dl>
+      <p class="fine">About five minutes. An original parody. Any resemblance to your own first day is the point.</p>
+    </div>
+  </section>
+  <pre id="dbg" hidden></pre>
+</div>
+<!--__SCRIPTS__-->
