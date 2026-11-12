@@ -16,7 +16,9 @@ const out = await build({
   legalComments: 'none',
 });
 const esc = (s) => s.replace(/<\/script/gi, '<\\/script');
-const game = esc(out.outputFiles[0].text);
+// If the 3D library is missing, say so instead of failing silently.
+const guard = `if(!window.THREE){document.querySelector('.lede').textContent='The 3D library did not load. Check the connection and reload.';document.getElementById('startBtn').disabled=true}else{`;
+const game = esc(guard + out.outputFiles[0].text + '}');
 const three = esc(fs.readFileSync('node_modules/three/build/three.min.js', 'utf8'));
 const css = fs.readFileSync('src/style.css', 'utf8');
 const tpl = fs.readFileSync('src/template.html', 'utf8').replace('/*__CSS__*/', () => css);

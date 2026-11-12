@@ -1,0 +1,57 @@
+// Phone-size layout check: title, kiosk and choices at 400 x 800.
+const { chromium } = require('playwright');
+const path = require('path');
+const fs = require('fs');
+(async () => {
+  const out = process.env.SHOTS || path.join(__dirname, '..', 'shots');
+  fs.mkdirSync(out, { recursive: true });
+  const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+  const page = await browser.newPage({ viewport: { width: 400, height: 800 }, deviceScaleFactor: 2, hasTouch: true, isMobile: true });
+  const logs = [];
+  page.on('console', (m) => m.type() === 'error' && logs.push(m.text()));
+  page.on('pageerror', (e) => logs.push('PAGEERROR ' + e.message));
+  await page.goto('file://' + path.resolve(__dirname, '..', 'index.html') + '?auto&skipride');
+  await page.waitForFunction(() => window.__game && window.__game.world);
+  await page.waitForTimeout(800);
+  await page.screenshot({ path: path.join(out, 'm-title.png') });
+  const over = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth }));
+  await page.evaluate(() => {
+    const G = window.__game;
+    G.stopAt = ['outside', 'tape', 'kiosk', 'onCarpet', 'landed'];
+    G.speed = 14;
+    G.snd.muted = true;
+  });
+  await page.tap('#startBtn');
+  const hold = async (name) => {
+    await page.waitForFunction((n) => window.__game.held === n || window.__game.error, name, { timeout: 300000 });
+    await page.waitForTimeout(400);
+  };
+  await hold('outside');
+  await page.screenshot({ path: path.join(out, 'm-outside.png') });
+  await page.evaluate(() => window.__game.release());
+  await hold('tape');
+  await page.evaluate(() => { window.__game.auto = false; window.__game.release(); });
+  await hold('kiosk');
+  await page.evaluate(() => window.__game.release());
+  await page.waitForSelector('#creator:not([hidden])');
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: path.join(out, 'm-kiosk.png') });
+  await page.tap('#takePhoto');
+  await page.waitForSelector('#kioskDone:not([hidden])');
+  await page.screenshot({ path: path.join(out, 'm-printed.png') });
+  await page.tap('#clipOn');
+  await page.evaluate(() => (window.__game.auto = true));
+  await hold('onCarpet');
+  await page.evaluate(() => { window.__game.auto = false; window.__game.release(); });
+  await page.waitForSelector('#choices:not([hidden])', { timeout: 60000 });
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: path.join(out, 'm-choices.png') });
+  await page.tap('#choiceList button:nth-child(2)');
+  await page.evaluate(() => (window.__game.speed = 1));
+  await hold('landed');
+  await page.screenshot({ path: path.join(out, 'm-landed.png') });
+  const over2 = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth }));
+  console.log('overflow', JSON.stringify(over), JSON.stringify(over2));
+  console.log(logs.join('\n') || 'no console errors');
+  await browser.close();
+})();

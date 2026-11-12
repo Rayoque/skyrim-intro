@@ -25,8 +25,6 @@
   --font-epic: "Cormorant Garamond", "Iowan Old Style", Palatino, Georgia, serif;
   --font-ui: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
-  --gl: max(16px, env(safe-area-inset-left, 0px));
-  --gr: max(16px, env(safe-area-inset-right, 0px));
   --gt: max(14px, env(safe-area-inset-top, 0px));
   --gb: max(14px, env(safe-area-inset-bottom, 0px));
 }
@@ -77,8 +75,8 @@ button { cursor: pointer; }
   grid-template-rows: auto 1fr auto;
   gap: 10px;
   padding-block: var(--gt) var(--gb);
-  padding-left: var(--gl);
-  padding-right: var(--gr);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
 #top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; min-height: 2.5rem; }
 #objective {
@@ -159,8 +157,8 @@ button { cursor: pointer; }
   display: grid;
   overflow-y: auto;
   padding-block: var(--gt) var(--gb);
-  padding-left: var(--gl);
-  padding-right: var(--gr);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
 .eyebrow { margin: 0; font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--note); }
 .title {
@@ -288,8 +286,10 @@ button { cursor: pointer; }
   #creator { justify-items: stretch; align-items: end; }
   #choices { align-items: end; justify-items: stretch; }
   .choice-box { width: 100%; margin-bottom: 4.5rem; }
-  .kiosk { align-self: end; max-height: 82%; }
-  .kiosk-body { grid-template-columns: minmax(0, 6.5rem) minmax(0, 1fr); gap: 0.75rem; padding: 0.75rem; }
+  .kiosk { align-self: end; max-height: 92%; }
+  .kiosk-body { grid-template-columns: minmax(0, 6.5rem) minmax(0, 1fr); gap: 0.75rem; padding: 0.75rem 0.75rem 1rem; }
+  .fields { gap: 0.6rem; }
+  .note { min-height: 0; }
   .keys div { grid-template-columns: 6rem 1fr; }
   #corner button { font-size: 0.66rem; padding: 0.4rem 0.5rem; }
   .bar { height: 7vh; }
